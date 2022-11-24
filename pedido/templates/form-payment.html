@@ -1,0 +1,355 @@
+{% extends 'base.html'%}
+{% load static%}
+
+{% block 'head'%}
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    
+    <link rel="stylesheet" href="{% static 'pedido/css/stripe.css'%}">
+
+
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=7">
+    <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    
+
+
+
+{% endblock %}
+
+
+{% block 'conteudo'%}
+<!--
+    <br>
+<div class="container">
+  <div class="row">
+    
+        <div id="central-payment">
+    <div class="col-md-6 col-sm-12">
+      <div>
+      
+            <form id="payment-form" class="">
+            <div id="payment-element">
+      
+      
+                Stripe.js injects the Payment Element
+            </div>
+      
+            <input class="data-adicionais" type="email" id="email" placeholder="Email...">
+            <br>
+            <br>
+            <input class="data-adicionais" type="text" id="cep" name="cep" placeholder="Cep...">
+            <br>
+            <br>
+            <input class="data-adicionais" type="text" id="rua" name="rua" placeholder="Rua...">
+            <br>
+            <br>
+            <input class="data-adicionais" type="text" id="bairro" placeholder="Bairro...">
+            <br>
+            <br>
+            <input class="data-adicionais" type="text" id="numero" name="numero" placeholder="Número...">
+            <br>
+            <br>
+            <h4>Cidade*:</h4>
+            <select class="form-control">
+                <option selected>Eunápolis</option>
+              </select>
+              <br>
+              <br>
+              <h5>Você pagará R${{total}}</h5>
+              <br>
+            <button id="submit">
+                <div class="spinner hidden" id="spinner"></div>
+                <span id="button-text">Pague agora</span>
+            </button>
+            <div id="payment-message" class="hidden"></div>
+      
+            </form>
+      </div>
+    </div>
+    
+        <div class="col-md-6 col-sm-12">
+    
+          <div>
+            <h5>Resumo da compra:*</h5>
+            <div class="dropdown show">
+              <a style="width:110px ;" class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <th scope="col"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus-fill" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zM8.5 8a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V12a.5.5 0 0 0 1 0v-1.5H10a.5.5 0 0 0 0-1H8.5V8z"/>
+                </svg></th>
+                <th scope="col">Itens:</th>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                {% for i in nome_produto%}
+                  <a class="dropdown-item" href="">{{i}}&nbsp</a>
+                {% endfor%}
+              </div>
+              <br>
+              <br>
+               <svg style="margin-right: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-diamond-fill" viewBox="0 0 16 16">
+                 <path d="M9.05.435c-.58-.58-1.52-.58-2.1 0L.436 6.95c-.58.58-.58 1.519 0 2.098l6.516 6.516c.58.58 1.519.58 2.098 0l6.516-6.516c.58-.58.58-1.519 0-2.098L9.05.435zM8 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+               </svg>Caso desista de um item, remova-o do carrinho de compras.
+             </div>
+                    </div>
+          </div>
+  </div>
+</div>
+
+-->
+
+<div class="container mt-5">
+  <div class="row">
+
+    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 mt-3 mb-5">
+    
+      <h5 class="text-center">Resumo da compra:*</h5>
+      
+      <div class="row d-flex justify-content-center">
+        <div class="dropdown show mt-1">
+          <a style="width:110px ;" class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <th scope="col"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus-fill" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zM8.5 8a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V12a.5.5 0 0 0 1 0v-1.5H10a.5.5 0 0 0 0-1H8.5V8z"/>
+            </svg></th>
+            <th scope="col">Itens:</th>
+          </a>
+
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            {% for i in nome_produto%}
+              <a class="dropdown-item" href="">{{i}}&nbsp</a>
+            {% endfor%}
+          </div>
+        </div>
+
+        <div>
+          <p class="d-block ml-3"><svg style="margin-right: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-diamond-fill" viewBox="0 0 16 16">
+            <path d="M9.05.435c-.58-.58-1.52-.58-2.1 0L.436 6.95c-.58.58-.58 1.519 0 2.098l6.516 6.516c.58.58 1.519.58 2.098 0l6.516-6.516c.58-.58.58-1.519 0-2.098L9.05.435zM8 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+          </svg>Caso desista de um item,<br>remova-o do carrinho de compras.</p>
+        </div>
+      </div>
+
+    </div>
+    
+      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
+
+        <div class="d-flex justify-content-center">
+
+          <form id="payment-form" class="">
+            
+              <div id="payment-element">
+                <!--Stripe.js injects the Payment Element-->
+              </div>
+              <input class="data-adicionais mb-4" type="email" id="email" placeholder="Email...">
+              <input class="data-adicionais mb-4" type="text" id="cep" name="cep" placeholder="Cep...">
+              <input class="data-adicionais mb-4" type="text" id="rua" name="rua" placeholder="Rua...">
+              <input class="data-adicionais mb-4" type="text" id="bairro" placeholder="Bairro...">
+              <input class="data-adicionais mb-4" type="text" id="numero" name="numero" placeholder="Número...">
+              <h4>Cidade*:</h4>
+              <select class="form-control">
+                  <option selected>Eunápolis</option>
+                </select>
+                <br>
+                <br>
+                <h5>Você pagará R${{total}}</h5>
+                <br>
+              <button id="submit">
+                  <div class="spinner hidden" id="spinner"></div>
+                  <span id="button-text">Pague agora</span>
+              </button>
+              <div id="payment-message" class="hidden"></div>
+            </form>
+
+        </div>
+    
+      </div>
+    
+  </div>
+
+</div>
+  
+
+    
+
+{% csrf_token %}
+</body>
+
+<script type="text/javascript">
+  var stripe = Stripe("{{ STRIPE_PUBLIC_KEY }}");
+  
+  function limpa_form(){
+    let email = document.getElementById('email')
+    email.value = ''
+    let cep = document.getElementById('cep')
+    cep.value = ''
+    let rua = document.getElementById('rua')
+    rua.value = ''
+    let bairro = document.getElementById('bairro')
+    bairro.value = ''
+    let numero = document.getElementById('numero')
+    numero.value = ''
+
+  }
+
+  let elements;
+
+  elements = stripe.elements();
+
+  const paymentElement = elements.create("card");
+  paymentElement.mount("#payment-element");
+
+  form = document.getElementById('payment-form')
+
+  form.addEventListener('submit', function(event){
+    setLoading(true)
+
+    
+    event.preventDefault()
+    const response =  fetch("{% url 'create-payment-intent'%}", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({'email': document.getElementById('email').value,
+                            'bairro':document.getElementById('bairro').value,
+                            'rua':document.getElementById('rua').value,
+                            'cep':document.getElementById('cep').value,
+                            'numero':document.getElementById('numero').value,})
+    })
+
+    .then(function(result){
+      return result.json()
+    })
+
+    
+    .then(function(data){
+      stripe.confirmCardPayment(data.clientSecret, {
+        payment_method: {
+          card: paymentElement
+        }
+      })
+
+   
+
+        .then(function(result){
+          setLoading(false)
+          if (result.error){
+            showMessage('Confira os dados digitados e tente novamente.')
+          }else{
+            showMessage('Compra finalizada com sucesso. Verifique seu email.')
+            const status = fetch("{% url 'clear_carrinho'%}", {
+              method: "POST",
+            })
+            .then(function(response){
+              limpa_form()
+
+              
+            })
+            const redirect = fetch("{% url 'finalizar_pedido' %}", {
+              method: "POST",
+            })
+
+
+          }
+
+
+        })
+    });
+
+    
+  })
+
+  function showMessage(messageText) {
+    const messageContainer = document.querySelector("#payment-message");
+
+    messageContainer.classList.remove("hidden");
+    messageContainer.textContent = messageText;
+
+    setTimeout(function () {
+      messageContainer.classList.add("hidden");
+      messageText.textContent = "";
+    }, 4000);
+  }
+
+  // Show a spinner on payment submission
+  function setLoading(isLoading) {
+    if (isLoading) {
+      // Disable the button and show a spinner
+      document.querySelector("#submit").disabled = true;
+      document.querySelector("#spinner").classList.remove("hidden");
+      document.querySelector("#button-text").classList.add("hidden");
+    } else {
+      document.querySelector("#submit").disabled = false;
+      document.querySelector("#spinner").classList.add("hidden");
+      document.querySelector("#button-text").classList.remove("hidden");
+    }
+  }
+
+
+
+
+
+$(document).ready(function() {
+
+function limpa_formulário_cep() {
+    // Limpa valores do formulário de cep.
+    $("#rua").val("");
+    $("#bairro").val("");
+}
+
+//Quando o campo cep perde o foco.
+$("#cep").blur(function() {
+    //Nova variável "cep" somente com dígitos.
+    var cep = $(this).val().replace(/\D/g, '');
+
+    //Verifica se campo cep possui valor informado.
+    if (cep != "") {
+
+        //Expressão regular para validar o CEP.
+        var validacep = /^[0-9]{8}$/;
+
+        //Valida o formato do CEP.
+        if(validacep.test(cep)) {
+
+            //Preenche os campos com "..." enquanto consulta webservice.
+            $("#rua").val("...");
+            $("#bairro").val("...");
+            
+
+            //Consulta o webservice viacep.com.br/
+            $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+            
+                if (!("erro" in dados)) {
+                    //Atualiza os campos com os valores da consulta.
+                    $("#rua").val(dados.logradouro);
+                    $("#bairro").val(dados.bairro);
+               
+                } //end if.
+                else {
+                    //CEP pesquisado não foi encontrado.
+                    limpa_formulário_cep();
+                    alert("CEP não encontrado.");
+                }
+            });
+        } //end if.
+        else {
+            //cep é inválido.
+            limpa_formulário_cep();
+            alert("Formato de CEP inválido.");
+        }
+    } //end if.
+    else {
+        //cep sem valor, limpa formulário.
+        limpa_formulário_cep();
+    }
+});
+});
+
+
+
+
+</script>
+</html>
+
+{% endblock%}
+
+

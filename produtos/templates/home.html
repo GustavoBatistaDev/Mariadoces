@@ -1,0 +1,47 @@
+{%extends 'base.html'%}
+
+{% block 'conteudo'%}
+<br>
+{% if messages %}
+    {% for i in messages%}
+    <div style="display:flex; width:100; justify-content: center;">
+      <div style="display: flex; justify-content: center; width: 50%;" class="alert {{i.tags}}" role="alert">
+          <span>{{i}}</span>
+      </div>
+    </div>
+    {% endfor %}
+  {% endif%}
+
+<div class="container">
+  
+    <div class="row d-flex justify-content-center">
+    {% for produto in produtos %}
+
+        {% if produto.ativo %}
+   
+        <div  class="cards card mt-5 ml-3 mr-3 " style="width: 18rem;">
+          <img class="card-img-top" src="/media/{{produto.img}}" height="180px"alt="Imagem de capa do card">
+          <div class="card-body">
+            <h5 class="card-title">{{produto.nome_produto}}</h5>
+
+            <p class="card-text">R${{produto.preco}}0 </p>
+
+            <p class="card-text">{{produto.descricao}}</p>
+            <a style="margin-top: 20px;" href="{% url 'produto' produto.id%}" class="botao">Adicionar ao carrinho</a>
+          </div>
+        </div>
+
+      {% endif %}
+      {% endfor %}  
+      
+      
+    </div>
+  </div>
+{%endblock%}
+
+
+
+
+
+
+
