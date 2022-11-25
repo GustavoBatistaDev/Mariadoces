@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool, default=False)
 
-ALLOWED_HOSTS = ['mariadoces.vps-kinghost.net', '127.0.0.1', '177.153.51.83', 'gustavdev.com.br']
+ALLOWED_HOSTS = ['mariadoces.vps-kinghost.net', '127.0.0.1', '177.153.51.83', 'gustavdev.com.br', 'http://gustavdev.com.br/']
 
 
 # Application definition
