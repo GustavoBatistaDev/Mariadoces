@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool, default=False)
 
 #toaq
-ALLOWED_HOSTS = ['mariadoces.vps-kinghost.net', '127.0.0.1', '177.153.51.83']
+ALLOWED_HOSTS = ['gustavdev.com.br','mariadoces.vps-kinghost.net', '127.0.0.1', '177.153.51.83']
 
 
 # Application definition
